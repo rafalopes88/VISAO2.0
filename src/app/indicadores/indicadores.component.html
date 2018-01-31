@@ -1,0 +1,10 @@
+<div id="indicadores" class="container">
+	<ul *ngFor="let indicador of indicadores" (click)="OnSelect(indicador.categoria)"> 
+		<li>{{ indicador.categoria }}</li>
+		<ul *ngIf="indicador.categoria == categoriaSelecionada" >
+			<li *ngFor="let nome of indicador.nome"> 
+				{{ nome }}
+			</li>
+		</ul>
+ 	</ul>
+</div>

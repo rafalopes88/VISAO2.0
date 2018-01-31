@@ -1,0 +1,15 @@
+#map{
+	height: 100%;
+	width:100%;
+	z-index: 0;
+}
+
+#dadosMapa{
+	height:40px;
+	position: relative;
+	z-index: 1;
+}
+
+#alteraDivisao{
+	background-color: white;
+}
