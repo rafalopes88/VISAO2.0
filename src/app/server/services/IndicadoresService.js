@@ -15,8 +15,9 @@ class IndicadoresService{
     	let self = this;
         let mapItem = this.req.body.mapItem;
         let indicadores = [];
-        let novaCategoria = "";
-        let result = [];
+        let velhaCategoria = "";
+        let nome = [];
+        let cod = [];
 
         try{
         	
@@ -33,27 +34,40 @@ class IndicadoresService{
 			        database: 'visaodb'
 			    }
 			).then(client => {
-    			client.query('SELECT cat.descricao as categoria, ind.descricao as indicador '+
+    			client.query('SELECT cod_indicador, cat.descricao as categoria, ind.descricao as indicador '+
     				'FROM categoria cat inner join indicador ind on cat.cod_categoria = ind.cod_categoria '+
     				'order by categoria;', function (err, data) {
     				data.forEach(function(item, index, array) {	
-                        if(typeof indicadores[item.categoria] !== 'undefined'){
-                            indicadores[item.categoria].push(item.indicador);
+                        if(velhaCategoria != item.categoria){
+                            if(velhaCategoria == ""){
+                                velhaCategoria = item.categoria;
+                                nome.push(item.indicador);
+                                cod.push(item.cod_indicador);
+                            }
+                            else{
+                                indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
+                                velhaCategoria = item.categoria;
+                                nome = [item.indicador];
+                                cod = [item.cod_indicador]; 
+                                
+                            }
+                            
                         }
                         else{
-                            indicadores[item.categoria] = [];
-                            indicadores[item.categoria].push(item.indicador);   
+                            nome.push(item.indicador);
+                            cod.push(item.cod_indicador);
                         }
-    					
+
+                           					
 			        });
+                    indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
                     
-                    for (let i in indicadores){
-                        result.push({"categoria": i ,"nome" :indicadores[i] });
-                    }
-                    JSON.stringify(result);
+                    console.log(indicadores);
+                    JSON.stringify(indicadores);
+                    
 			        if( indicadores != []){
                         
-			        	return self.res.status(200).json(result);
+			        	return self.res.status(200).json(indicadores);
 			        }
 			        			        
 			        

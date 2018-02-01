@@ -1,4 +1,4 @@
 export class Indicador {
 	categoria: string;
-	nome:string[];
+	componentes:any;
 }
