@@ -2,9 +2,9 @@
 <div id = "dadosMapa" class="container">
 	<div class= "row">
 		<div id= "alteraDivisao" class = "col-sm-4" >
-			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('geojs-100-mun.json')" [checked]= "true" [value]="municipio">Municipio
-			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('MesoRegiao.json')" [checked]= "false" [value]="mesoRegiao">Meso Região
-			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('uf.json')" [checked]= "false" [value]="estado"> Estado
+			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('municipio')" [checked]= "true" [value]="municipio">Municipio
+			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('mesoRegiao')" [checked]= "false" [value]="mesoRegiao">Meso Região
+			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('estado')" [checked]= "false" [value]="estado"> Estado
 		</div> 
 	</div>
 </div>

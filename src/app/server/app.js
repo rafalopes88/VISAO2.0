@@ -18,6 +18,10 @@ app.get('/api/GetDivisoes', function (req, res) {
 	let mapServiceObj = new mapService(req, res);
 	mapServiceObj.GetDivisoes();
 });
+app.get('/api/AplicarIndicador', function (req, res) {
+	let mapServiceObj = new mapService(req, res);
+	mapServiceObj.AplicarIndicador(req, res);
+});
 app.get('/api/GetIndicadores', function (req, res) {
 	let IndServiceObj = new IndicadoresService(req, res);
 	IndServiceObj.GetIndicadores();

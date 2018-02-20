@@ -11,7 +11,7 @@ export class IndicadoresService {
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
-  	private indicadoresUrl = ' http://localhost:3000/api/';
+  	private indicadoresUrl = 'http://localhost:3000/api/';
 
 	private log(message: string) {
 		this.messageService.add('MapService: ' + message);

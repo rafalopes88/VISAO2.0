@@ -3,9 +3,10 @@ import { MessageService } from './message.service';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Rx';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Geometria } from './geometria';
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -23,8 +24,15 @@ export class MapService {
 	    pipe(tap(geometrias => this.log(`fetched geometria`)),
 	        catchError(this.handleError('getDivisoes', []))
 	    );
+	}
+	AplicaIndicador (divisao, codIndicador): Observable<any> {
+	    return this.http.get<any>("http://localhost:3000/api/AplicarIndicador", { params: {divisao: divisao ,codIndicador: codIndicador}}).
+	    pipe(tap(geometrias => this.log(`fetched indicador`)),
+	        catchError(this.handleError('AplicaIndicador', []))
+	    );
                          
-	 }
+	}
+	
 
 	private log(message: string) {
 		this.messageService.add('MapService: ' + message);

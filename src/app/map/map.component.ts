@@ -19,12 +19,13 @@ export class MapComponent implements OnInit {
 	map : L.Map;
 	divisaoAtual :Divisoes;
 	@Input() codIndicador :number;
+	nomeDivisaoAtual: string = "municipio";
 
 	constructor(private mapService: MapService) {}
 
 	ngOnInit() {
 		this.InitMap();
-		this.GetDivisoes('geojs-100-mun.json');
+		this.GetDivisoes('municipio');
 
 	}
 		
@@ -39,16 +40,19 @@ export class MapComponent implements OnInit {
 			}).addTo(this.map);
 	}
 	AplicarIndicador(){
-		console.log(this.codIndicador);
+		this.mapService.AplicaIndicador(this.nomeDivisaoAtual, this.codIndicador)
+      		 .subscribe();
 	}
 
 	AlteraDivisao(divisao){
 		this.divisaoAtual.GetPerimetro().clearLayers();
+		this.nomeDivisaoAtual = divisao;
 		this.GetDivisoes(divisao);
 	}
 
 	SalvarAplicarDivisoes(divisao): void{
 		this.divisaoAtual = new Divisoes();
+		
 		for (let i in divisao){
 			this.divisaoAtual.AddNew(divisao[i].id, divisao[i].nome, divisao[i].geometry);
 		}
@@ -58,7 +62,7 @@ export class MapComponent implements OnInit {
 	}
 
 	GetDivisoes(divisao): void{
-		this.mapService.GetDivisoes(divisao)
+		this.mapService.GetDivisoes(divisao+".json")
       		 .subscribe(geometrias =>  this.SalvarAplicarDivisoes(geometrias.features));
 	}
 

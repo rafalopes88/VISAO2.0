@@ -74,6 +74,10 @@ class MapService{
             })
         }
     }
+
+    AplicarIndicador(req, res){
+    	console.log(req.query.divisao);
+    }
 }
 
 module.exports = MapService
