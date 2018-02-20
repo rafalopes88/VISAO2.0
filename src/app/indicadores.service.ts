@@ -11,21 +11,26 @@ export class IndicadoresService {
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
-  	private indicadoresUrl = ' http://localhost:3000/api/GetIndicadores';
+  	private indicadoresUrl = ' http://localhost:3000/api/';
 
 	private log(message: string) {
 		this.messageService.add('MapService: ' + message);
 	}
 
-	GetIndicadores (): Observable<Indicador[]> {
-	    return this.http.get<Indicador[]>(this.indicadoresUrl).
-	    pipe(tap(geometrias => this.log(`fetched geometria`)),
-	        catchError(this.handleError('getDivisoes', []))
+	GetCategorias (): Observable<Indicador[]> {
+	    return this.http.get<Indicador[]>(this.indicadoresUrl+ "GetIndicadores").
+	    pipe(tap(geometrias => this.log(`fetched indicadores`)),
+	        catchError(this.handleError('GetCategorias', []))
 	    );
                          
 	 }
 
-
+	GetDadosIndicador(): Observable<Indicador[]>{
+		return this.http.get<Indicador[]>(this.indicadoresUrl + "Getdados").
+	    pipe(tap(geometrias => this.log(`fetched dados`)),
+	        catchError(this.handleError('GetDadosIndicador', []))
+	    );
+	}
 	private handleError<T> (operation = 'operation', result?: T) {
 	  return (error: any): Observable<T> => {
 	 

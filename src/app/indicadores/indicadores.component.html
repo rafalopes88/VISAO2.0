@@ -1,10 +1,11 @@
 <div id="indicadores" class="container">
-	<ul *ngFor="let indicador of indicadores" (click)="OnSelect(indicador.categoria)"> 
+	<ul *ngFor="let indicador of indicadores" (click)="OnSelectCategoria(indicador.categoria)"> 
 		<li>{{ indicador.categoria }}</li>
 		<ul *ngIf="indicador.categoria == categoriaSelecionada" >
-			<li *ngFor="let nome of indicador.nome" class="listaIndicadores"> 
-				<input type="radio" name="radioIndicador" >{{ nome }}
+			<li *ngFor="let nome of indicador.nome; let i = index" class="listaIndicadores"> 
+				<input type="radio" name="radioIndicador" (change)="AlteraIndicador(indicador.cod[i])">{{ nome }}
 			</li>
 		</ul>
  	</ul>
 </div>
+<app-map [codIndicador] = "indicadorSelecionado" ></app-map>

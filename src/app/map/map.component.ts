@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { latLng, LatLng, tileLayer } from 'leaflet';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
@@ -18,9 +18,7 @@ export class MapComponent implements OnInit {
 	
 	map : L.Map;
 	divisaoAtual :Divisoes;
-	
-	
-	
+	@Input() codIndicador :number;
 
 	constructor(private mapService: MapService) {}
 
@@ -40,7 +38,9 @@ export class MapComponent implements OnInit {
 			    accessToken: 'your.mapbox.access.token'
 			}).addTo(this.map);
 	}
-	
+	AplicarIndicador(){
+		console.log(this.codIndicador);
+	}
 
 	AlteraDivisao(divisao){
 		this.divisaoAtual.GetPerimetro().clearLayers();

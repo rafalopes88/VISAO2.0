@@ -62,7 +62,6 @@ class IndicadoresService{
 			        });
                     indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
                     
-                    console.log(indicadores);
                     JSON.stringify(indicadores);
                     
 			        if( indicadores != []){

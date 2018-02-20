@@ -13,3 +13,8 @@
 #alteraDivisao{
 	background-color: white;
 }
+
+#AplicarNoMapa{
+	position: absolute;
+	left:315px;
+}
