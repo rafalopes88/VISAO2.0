@@ -20,13 +20,14 @@ export class MapComponent implements OnInit {
 	divisaoAtual :Divisoes;
 	@Input() codIndicador :number;
 	nomeDivisaoAtual: string = "municipio";
+	brasil: L.GeoJSON = new L.GeoJSON();
+
 
 	constructor(private mapService: MapService) {}
 
 	ngOnInit() {
 		this.InitMap();
 		this.GetDivisoes('municipio');
-
 	}
 		
 	InitMap(){
@@ -38,6 +39,18 @@ export class MapComponent implements OnInit {
 			    id: 'mapbox.streets',
 			    accessToken: 'your.mapbox.access.token'
 			}).addTo(this.map);
+		this.GetBrasil();
+	}
+
+	GetBrasil(){
+		this.mapService.GetBrasil()
+      		 .subscribe(brasil =>  this.AplicaBrasil(brasil.features));
+	}
+
+	AplicaBrasil(brasil){
+		this.brasil.addData(brasil[0].geometry);
+		
+  		this.brasil.addTo(this.map);
 	}
 	AplicarIndicador(){
 		this.mapService.AplicaIndicador(this.nomeDivisaoAtual, this.codIndicador)

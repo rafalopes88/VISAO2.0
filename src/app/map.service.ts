@@ -25,6 +25,12 @@ export class MapService {
 	        catchError(this.handleError('getDivisoes', []))
 	    );
 	}
+	GetBrasil (): Observable<any> {
+	    return this.http.get<any>(this.mapUrl + "brasil.json").
+	    pipe(tap(geometrias => this.log(`fetched brasil`)),
+	        catchError(this.handleError('getBrasil', []))
+	    );
+	}
 	AplicaIndicador (divisao, codIndicador): Observable<any> {
 	    return this.http.get<any>("http://localhost:3000/api/AplicarIndicador", { params: {divisao: divisao ,codIndicador: codIndicador}}).
 	    pipe(tap(geometrias => this.log(`fetched indicador`)),

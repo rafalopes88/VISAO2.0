@@ -76,7 +76,7 @@ class MapService{
     }
 
     AplicarIndicador(req, res){
-    	console.log(req.query.divisao);
+    	console.log(req.query);
     }
 }
 
