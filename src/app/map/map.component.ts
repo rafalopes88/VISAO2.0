@@ -27,7 +27,7 @@ export class MapComponent implements OnInit {
 
 	ngOnInit() {
 		this.InitMap();
-		this.GetDivisoes('municipio');
+		this.GetDivisoes('municipio1');
 	}
 		
 	InitMap(){
@@ -67,7 +67,7 @@ export class MapComponent implements OnInit {
 		this.divisaoAtual = new Divisoes();
 		
 		for (let i in divisao){
-			this.divisaoAtual.AddNew(divisao[i].id, divisao[i].nome, divisao[i].geometry);
+			this.divisaoAtual.AddNew(divisao[i].properties.CD_GEOCMU, divisao[i].properties.NM_MUNICIP, divisao[i].geometry);
 		}
 
 		this.divisaoAtual.GetPerimetro().addTo(this.map);
