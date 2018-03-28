@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/Rx';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Geometria } from './geometria';
+import {Dados} from './Dados';
+
 
 
 const httpOptions = {
@@ -31,7 +33,7 @@ export class MapService {
 	        catchError(this.handleError('getBrasil', []))
 	    );
 	}
-	AplicaIndicador (divisao, codIndicador): Observable<any> {
+	AplicaIndicador (divisao, codIndicador): Observable<Dados[]> {
 	    return this.http.get<any>("http://localhost:3000/api/AplicarIndicador", { params: {divisao: divisao ,codIndicador: codIndicador}}).
 	    pipe(tap(geometrias => this.log(`fetched indicador`)),
 	        catchError(this.handleError('AplicaIndicador', []))
@@ -41,7 +43,7 @@ export class MapService {
 	
 
 	private log(message: string) {
-		this.messageService.add('MapService: ' + message);
+		console.log('MapService: ' + message);
 	}
 
 

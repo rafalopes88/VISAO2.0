@@ -5,9 +5,11 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapService } from '../map.service';
 import { Geometria } from '../geometria';
 import  { Divisoes } from '../Divisoes';
+import {Dados} from '../Dados';
 
-
-
+let dados: Dados[];
+let nomeDivisaoAtual :string;
+let min, max;
 
 @Component({
   selector: 'app-map',
@@ -17,17 +19,21 @@ import  { Divisoes } from '../Divisoes';
 export class MapComponent implements OnInit {
 	
 	map : L.Map;
-	divisaoAtual :Divisoes;
+	
 	@Input() codIndicador :number;
-	nomeDivisaoAtual: string = "municipio";
 	brasil: L.GeoJSON = new L.GeoJSON();
+	divisaoAtual: L.GeoJSON;
+	municipio: L.GeoJSON;
+	mesoRegiao: L.GeoJSON;
+	estado: L.GeoJSON;
+	// dados: any;
 
 
 	constructor(private mapService: MapService) {}
 
 	ngOnInit() {
 		this.InitMap();
-		this.GetDivisoes('municipio1');
+		this.GetDivisoes('municipio');
 	}
 		
 	InitMap(){
@@ -52,31 +58,131 @@ export class MapComponent implements OnInit {
 		
   		this.brasil.addTo(this.map);
 	}
-	AplicarIndicador(){
-		this.mapService.AplicaIndicador(this.nomeDivisaoAtual, this.codIndicador)
-      		 .subscribe();
+
+	NovoIndicador(){
+		dados = new Array();
+		this.AplicarIndicador();
 	}
+	AplicarIndicador(){
+		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador)
+      		 .subscribe(dados => this.ColorirMapa(dados));
+	}
+
 
 	AlteraDivisao(divisao){
-		this.divisaoAtual.GetPerimetro().clearLayers();
-		this.nomeDivisaoAtual = divisao;
-		this.GetDivisoes(divisao);
+		
+		this.divisaoAtual.remove();
+		nomeDivisaoAtual = divisao;
+
+		if(divisao== 'municipio'){
+			this.divisaoAtual = this.municipio;
+			if(dados != null){
+				if(!dados[nomeDivisaoAtual])
+					this.AplicarIndicador();
+				else
+					this.divisaoAtual.addTo(this.map);
+			}
+		}
+		else if(divisao== 'mesoRegiao'){
+			if( this.mesoRegiao == null){
+				this.GetDivisoes(divisao);
+			}
+			else{
+				this.divisaoAtual = this.mesoRegiao;
+				if(dados != null){
+					if(!dados[nomeDivisaoAtual])
+						this.AplicarIndicador();
+					else
+						this.divisaoAtual.addTo(this.map);
+					
+				}
+			}
+			
+		}
+		else{
+			if( this.estado == null){
+				this.GetDivisoes(divisao);
+			}
+			else{
+
+				this.divisaoAtual = this.estado;
+				if(dados != null){
+					if(!dados[nomeDivisaoAtual])
+						this.AplicarIndicador();
+					else
+						this.divisaoAtual.addTo(this.map);
+				}
+			}
+		}		
+		
 	}
 
-	SalvarAplicarDivisoes(divisao): void{
-		this.divisaoAtual = new Divisoes();
-		
-		for (let i in divisao){
-			this.divisaoAtual.AddNew(divisao[i].properties.CD_GEOCMU, divisao[i].properties.NM_MUNICIP, divisao[i].geometry);
+	ColorirMapa(dados1){
+		dados[nomeDivisaoAtual] = new Array();
+		dados[nomeDivisaoAtual] = dados1.map(function(x) {return {"cod":x.municipio, "valor": Number(x.valor)}; });
+		min = Math.min.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
+  		max = Math.max.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
+		this.divisaoAtual.setStyle(this.Style);
+		this.divisaoAtual.addTo(this.map);
+	}
+
+	Style(feature) { 
+		let low = [5, 69, 54];
+  		let high = [151, 83, 34];
+  		let delta;
+		let color = [];
+		let outlineWeight = 0.5, zIndex = 1;
+  		let strokeColorVal = '#fff';
+  		let opacity = 0;
+  		let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(feature.properties.CD_GEOCMU));
+		if( index != -1){
+			delta = (dados[nomeDivisaoAtual][index].valor  - min)/(max - min);
+			
+			for (let i = 0; i < 3; i++) {
+		      color[i] = (high[i] - low[i]) * delta + low[i];
+		    }
+		    opacity = 0.75;
 		}
+		
+        return {
+            weight: outlineWeight,
+		    color: strokeColorVal,
+		    fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
+		    fillOpacity: opacity
+		    // visible: visibility
+        };
+    }
+	
 
-		this.divisaoAtual.GetPerimetro().addTo(this.map);
+	SalvarAplicarDivisoes(geometrias, divisao): void{
 
+		if(divisao == 'municipio'){
+			this.municipio = new L.GeoJSON(geometrias);
+			this.divisaoAtual = this.municipio;
+		}
+		else if (divisao == 'mesoRegiao'){
+			this.mesoRegiao = new L.GeoJSON(geometrias);
+			this.divisaoAtual = this.mesoRegiao
+		}
+		else {
+			this.estado = new L.GeoJSON(geometrias);
+			this.divisaoAtual = this.estado
+		}
+		nomeDivisaoAtual = divisao;
+		
+		if(dados != null){
+			if(!dados[nomeDivisaoAtual]){
+
+				this.AplicarIndicador();
+			}
+			else
+				this.divisaoAtual.addTo(this.map);
+		}
 	}
 
 	GetDivisoes(divisao): void{
 		this.mapService.GetDivisoes(divisao+".json")
-      		 .subscribe(geometrias =>  this.SalvarAplicarDivisoes(geometrias.features));
+      		 .subscribe(geometrias =>  this.SalvarAplicarDivisoes(geometrias, divisao));
 	}
 
   

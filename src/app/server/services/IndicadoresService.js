@@ -1,4 +1,4 @@
-const mysqlssh = require('mysql-ssh');
+let mysql = require('mysql');
 const fs = require('fs');
 
 
@@ -21,41 +21,37 @@ class IndicadoresService{
 
         try{
         	
-        	mysqlssh.connect(
-			    {
-			        host: '172.25.0.22',
-			        user: 'rafael',
-			        password: 'ibict2017'
-			    },
-			    {
-			        host: 'localhost',
-			        user: 'root',
-			        password: 'ibict2017',
-			        database: 'visaodb'
-			    }
-			).then(client => {
-    			client.query('SELECT cod_indicador, cat.descricao as categoria, ind.descricao as indicador '+
-    				'FROM categoria cat inner join indicador ind on cat.cod_categoria = ind.cod_categoria '+
-    				'order by categoria;', function (err, data) {
+        	var con = mysql.createConnection({
+              host: "localhost",
+              user: "root",
+              password: 'ibict2017',
+              database: "visao"
+            });
+			con.connect(function(err) {
+    			if (err) throw err;
+                    con.query('SELECT ind.cod_indicador as codigo,cat.nome as categoria,ind.nome as indicador '+
+                    'FROM indicador ind '+
+                    'INNER JOIN categoria cat on cat.cod_categoria = ind.categoria_cod_categoria;', function (err, data) {
+                    if (err) throw err;
     				data.forEach(function(item, index, array) {	
                         if(velhaCategoria != item.categoria){
                             if(velhaCategoria == ""){
                                 velhaCategoria = item.categoria;
                                 nome.push(item.indicador);
-                                cod.push(item.cod_indicador);
+                                cod.push(item.codigo);
                             }
                             else{
                                 indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
                                 velhaCategoria = item.categoria;
                                 nome = [item.indicador];
-                                cod = [item.cod_indicador]; 
+                                cod = [item.codigo]; 
                                 
                             }
                             
                         }
                         else{
                             nome.push(item.indicador);
-                            cod.push(item.cod_indicador);
+                            cod.push(item.codigo);
                         }
 
                            					

@@ -4,6 +4,7 @@
 		<ul *ngIf="indicador.categoria == categoriaSelecionada" >
 			<li *ngFor="let nome of indicador.nome; let i = index" class="listaIndicadores"> 
 				<input type="radio" name="radioIndicador" (change)="AlteraIndicador(indicador.cod[i])">{{ nome }}
+				
 			</li>
 		</ul>
  	</ul>

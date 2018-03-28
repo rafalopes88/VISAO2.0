@@ -2,10 +2,10 @@
 <div id = "dadosMapa" class="container">
 	<div class= "row">
 		<div id= "alteraDivisao" class = "col-sm-4" >
-			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('municipio1')" [checked]= "true" [value]="municipio">Municipio
+			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('municipio')" [checked]= "true" [value]="municipio">Municipio
 			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('mesoRegiao')" [checked]= "false" [value]="mesoRegiao">Meso Região
 			<input type="radio" name="radioalteraDivisao" (change)="AlteraDivisao('estado')" [checked]= "false" [value]="estado"> Estado
 		</div> 
 	</div>
 </div>
-<button id="AplicarNoMapa" (click)="AplicarIndicador()">Aplicar no mapa</button>
+<button id="AplicarNoMapa" (click)="NovoIndicador()">Aplicar no mapa</button>

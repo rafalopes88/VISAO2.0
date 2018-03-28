@@ -1,9 +1,9 @@
-const mysqlssh = require('mysql-ssh');
+let mysql = require('mysql');
 const fs = require('fs');
-var S = require('string');
+let S = require('string');
 const assert = require('assert');
-var stringify = require('json-stringify');
-
+let stringify = require('json-stringify');
+const debug = 0;
 class Municipio{
 
 	constructor(n,c,g){
@@ -21,62 +21,121 @@ class MapService{
         this.res = res
     }
 
-    GetDivisoes(){
+    AplicarIndicador(req, res){
+        let self = this;
+        let output = [];
 
-    	let self = this;
-        let mapItem = this.req.body.mapItem;
+        function Indicador(m,v){
+            this.municipio= m;
+            this.valor= v;
+        };
+        
+
+        //FunÃ§Ã£o para transformar o string da formula em um resultado
+        function Resolver(eq){  
+            return eval(eq).toFixed(2);
+        }
         try{
-        	let Municipios = [];
-        	mysqlssh.connect(
-			    {
-			        host: '172.25.0.22',
-			        user: 'rafael',
-			        password: 'ibict2017'
-			    },
-			    {
-			        host: 'localhost',
-			        user: 'root',
-			        password: 'ibict2017',
-			        database: 'visaodb'
-			    }
-			).then(client => {
-    			client.query('SELECT cod_estado, Nome,  ST_AsWKT(geometria) as geo FROM estado where geometria is not null', function (err, data) {
-    				data.forEach(function(item, index, array) {
+            let output = [];
+            let mysql = require('mysql'); 
+            //INPUT de detalhamento geográfico e código do Indicador
+            let detG = req.query.divisao;
+            let codind = req.query.codIndicador;
+            let query;
+            let con = mysql.createConnection({
+              host: "localhost",
+              user: "root",
+              password: 'ibict2017',
+              database: "visao"
+            });
 
-					
-						let sujo = item.geo;
-						let Perimetro;
-						let Par;
+            
 
-						if(sujo != null){
-							sujo = S(sujo).chompRight('))').s;
-							sujo = S(sujo).chompLeft('POLYGON((').s;
+            con.connect(function(err) {
+              if (err) throw err;
+                let div = "vi.municipio_cod_municipio";
+                let join ='';
+                
+                if(detG != "municipio"){
+                    if(detG == "estado"){
+                        div = "e.cod_estado";
+                        join = " INNER JOIN estado e on e.cod_estado = m.estado_estado ";
+                    }else{
+                        div = "mr.cod_mesoRegiao";
+                        join = " INNER JOIN mesoRegiao mr on mr.cod_mesoRegiao = m.mesoRegiao_cod_mesoRegiao ";
+                    }
+                }
+                query = 'SELECT ordem,antecessor, uni.nome,  '+div+' as divisao, sum(vi.valor) as valor FROM indicador_informacao ii '+
+                        'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
+                        'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
+                        'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ join +
+                        ' where i.cod_indicador = '+codind+' GROUP BY ordem, antecessor, divisao ORDER BY '+div+ ' ,ordem;'
+                
+                con.query(query, function (err, result, fields) {
 
-	      					Perimetro = sujo;
-	         			}
-
-			          	Municipios.push(new Municipio(item.Nome, item.cod_municipio, Perimetro));
-			        });
-			        if( Municipios != []){
-			        	return self.res.status(200).json({
-		                    status: 'success',
-		                    data: Municipios
-		                })
-			        }
-			        mysqlssh.close();
-    			});
-			})
+                    if (err) throw err;
+                    
+                    //Seleciona a primeira divisao
+                    let divisao = result[0].divisao;
+                    let equacao = "";
+                    let indisponivel = 0;
+                    if(result[0].valor!=null){
+                        if(result[0].antecessor==null){
+                            equacao = result[0].valor.toString(); 
+                        }else{
+                            equacao = result[0].antecessor;
+                            equacao = equacao.concat(result[0].valor.toString());
+                        }
+                    }else{
+                        indisponivel = 1;
+                    } 
+                //Busca todas valores das informações de todas divisoes
+                    for(let i=1;i<result.length;i++){
+                //Quando a busca encontrar outra divisao a equacao da divisao anterior estará completa
+                        if(divisao != result[i].divisao){           
+                            if(indisponivel == 0){      
+                                output.push(new Indicador(divisao, Resolver(equacao)));
+                            }else{
+                                //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
+                            }
+                            divisao = result[i].divisao;
+                            equacao = "";
+                            indisponivel = 0;           
+                        }
+                //Adicionar o valor e o antecessor à formula do indicador
+                        if(result[i].valor!=null){
+                            if(result[i].antecessor==null){
+                                equacao = equacao.concat(result[i].valor.toString());
+                            }else{
+                                equacao = equacao.concat(result[i].antecessor);
+                                equacao = equacao.concat(result[i].valor.toString());
+                            }
+                        }
+                        else{
+                            indisponivel =1;
+                        }
+                    }
+                    if(indisponivel == 0){
+                        output.push(new Indicador(divisao, Resolver(equacao)));     
+                    }else{
+                        //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
+                    }
+                    
+                    //Retorna um JSON com a divisao e o valor do indicador
+                    JSON.stringify(output);
+                    if( output != []){
+                        return self.res.status(200).json(output);
+                    }
+                });
+            });
         }
         catch(error){
+
             return self.res.status(500).json({
                 status: 'error',
                 error: error
-            })
+            });
         }
-    }
-
-    AplicarIndicador(req, res){
-    	console.log(req.query);
     }
 }
 
