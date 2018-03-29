@@ -1,7 +1,7 @@
 let mysql = require('mysql');
 const fs = require('fs');
 
-
+//SERÁ QUE VOU COMEÇAR A TRABALHAR?
 
 class IndicadoresService{
 
