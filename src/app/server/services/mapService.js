@@ -4,6 +4,9 @@ let S = require('string');
 const assert = require('assert');
 let stringify = require('json-stringify');
 const debug = 0;
+
+let detG = "";
+
 class Municipio{
 
 	constructor(n,c,g){
@@ -21,9 +24,25 @@ class MapService{
         this.res = res
     }
 
+    static DetalhamentoGeo(div){
+        div.nome = "vi.municipio_cod_municipio";
+        if(detG != "municipio"){
+            if(detG == "estado"){
+                div.nome = "e.cod_estado";
+                div.join = " INNER JOIN estado e on e.cod_estado = m.estado_estado ";
+            }else{
+                div.nome = "mr.cod_mesoRegiao";
+                div.join = " INNER JOIN mesoRegiao mr on mr.cod_mesoRegiao = m.mesoRegiao_cod_mesoRegiao ";
+            }
+        } 
+    }
+
+
+
     AplicarIndicador(req, res){
         let self = this;
         let output = [];
+        detG = req.query.divisao;
 
         function Indicador(m,v){
             this.municipio= m;
@@ -39,7 +58,7 @@ class MapService{
             let output = [];
             let mysql = require('mysql'); 
             //INPUT de detalhamento geográfico e código do Indicador
-            let detG = req.query.divisao;
+            
             let codind = req.query.codIndicador;
             let query;
             let con = mysql.createConnection({
@@ -53,23 +72,15 @@ class MapService{
 
             con.connect(function(err) {
               if (err) throw err;
-                let div = "vi.municipio_cod_municipio";
-                let join ='';
+                let div = {nome:'', join: ''};                
                 
-                if(detG != "municipio"){
-                    if(detG == "estado"){
-                        div = "e.cod_estado";
-                        join = " INNER JOIN estado e on e.cod_estado = m.estado_estado ";
-                    }else{
-                        div = "mr.cod_mesoRegiao";
-                        join = " INNER JOIN mesoRegiao mr on mr.cod_mesoRegiao = m.mesoRegiao_cod_mesoRegiao ";
-                    }
-                }
-                query = 'SELECT ordem,antecessor, uni.nome,  '+div+' as divisao, sum(vi.valor) as valor FROM indicador_informacao ii '+
+                MapService.DetalhamentoGeo(div);
+
+                query = 'SELECT ordem,antecessor, uni.nome,  '+div.nome+' as divisao, sum(vi.valor) as valor FROM indicador_informacao ii '+
                         'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
                         'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
-                        'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ join +
-                        ' where i.cod_indicador = '+codind+' GROUP BY ordem, antecessor, divisao ORDER BY '+div+ ' ,ordem;'
+                        'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join +
+                        ' where i.cod_indicador = '+codind+' GROUP BY ordem, antecessor, divisao ORDER BY '+div.nome+ ' ,ordem;'
                 
                 con.query(query, function (err, result, fields) {
 
