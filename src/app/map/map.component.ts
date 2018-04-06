@@ -1,15 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { latLng, LatLng, tileLayer } from 'leaflet';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapService } from '../map.service';
-import { Geometria } from '../geometria';
-import  { Divisoes } from '../Divisoes';
 import {Dados} from '../Dados';
+
+
+declare let $:any;
 
 let dados: Dados[];
 let nomeDivisaoAtual :string;
 let min, max;
+let _that;
 
 @Component({
   selector: 'app-map',
@@ -26,17 +27,22 @@ export class MapComponent implements OnInit {
 	municipio: L.GeoJSON;
 	mesoRegiao: L.GeoJSON;
 	estado: L.GeoJSON;
-	// dados: any;
+	displayData: any;
+	dadoMostrado: string;
+	
 
 
 	constructor(private mapService: MapService) {}
 
 	ngOnInit() {
+		_that = this;
 		this.InitMap();
+		this.GetBrasil()
 		this.GetDivisoes('municipio');
 	}
 		
 	InitMap(){
+
 		this.map = L.map('map').setView([-15, -50], 3);
 
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicmFmYWxvcGVzODgiLCJhIjoiY2o5MDYzb2JxMnYyMTJybjViM3g0d2lsZCJ9.n3NudHq80ot-J9oJ3I9KPQ', {
@@ -45,7 +51,6 @@ export class MapComponent implements OnInit {
 			    id: 'mapbox.streets',
 			    accessToken: 'your.mapbox.access.token'
 			}).addTo(this.map);
-		this.GetBrasil();
 	}
 
 	GetBrasil(){
@@ -117,16 +122,47 @@ export class MapComponent implements OnInit {
 		
 	}
 
+	HighlightFeature(e) {
+	    let layer = e.target;
+	    layer.setStyle({
+	        weight: 3
+	    });
+	   
+
+	    if (!L.Browser.ie && !L.Browser.edge) {
+	        layer.bringToFront();
+	    }
+	    this.displayData = true;
+	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
+
+	    this.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+	}
+
+	ResetHighlight(e) {
+		let layer = e.target;
+	    layer.setStyle({
+	    	weight: 0.5
+	    });
+	    this.displayData = false;
+	}
+
 	ColorirMapa(dados1){
 		dados[nomeDivisaoAtual] = new Array();
 		dados[nomeDivisaoAtual] = dados1.map(function(x) {return {"cod":x.municipio, "valor": Number(x.valor)}; });
 		min = Math.min.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
   		max = Math.max.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
 		this.divisaoAtual.setStyle(this.Style);
+		this.divisaoAtual.eachLayer(function(layer){
+			layer.on({
+		        mouseover: _that.HighlightFeature,
+		        mouseout: _that.ResetHighlight
+	    	});
+		});
 		this.divisaoAtual.addTo(this.map);
 	}
 
 	Style(feature) { 
+
 		let low = [5, 69, 54];
   		let high = [151, 83, 34];
   		let delta;
@@ -149,10 +185,8 @@ export class MapComponent implements OnInit {
 		    color: strokeColorVal,
 		    fillColor: 'hsl(' + color[0] + ',' + color[1] + '%,' + color[2] + '%)',
 		    fillOpacity: opacity
-		    // visible: visibility
         };
     }
-	
 
 	SalvarAplicarDivisoes(geometrias, divisao): void{
 

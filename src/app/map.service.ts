@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Rx';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Geometria } from './geometria';
 import {Dados} from './Dados';
 
 
