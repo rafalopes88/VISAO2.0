@@ -23,9 +23,10 @@ class MapService{
         this.req = req
         this.res = res
     }
-
+//Funcao que configura a pesquisa ao banco de dados para o detalhamento geográfico atual
     static DetalhamentoGeo(div){
         div.nome = "vi.municipio_cod_municipio";
+        div.join = "";
         if(detG != "municipio"){
             if(detG == "estado"){
                 div.nome = "e.cod_estado";
@@ -47,8 +48,7 @@ class MapService{
         function Indicador(m,v){
             this.municipio= m;
             this.valor= v;
-        };
-        
+        };        
 
         //FunÃ§Ã£o para transformar o string da formula em um resultado
         function Resolver(eq){  
@@ -100,7 +100,7 @@ class MapService{
                     }else{
                         indisponivel = 1;
                     } 
-                //Busca todas valores das informações de todas divisoes
+                //Busca todos valores das informações de todas divisoes
                     for(let i=1;i<result.length;i++){
                 //Quando a busca encontrar outra divisao a equacao da divisao anterior estará completa
                         if(divisao != result[i].divisao){           

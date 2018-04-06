@@ -10,12 +10,14 @@ import { Indicador } from '../Indicador';
 })
 export class IndicadoresComponent implements OnInit {
 	indicadores : Indicador[];
+	anos : number[];
 	categoriaSelecionada: string;
 	indicadorSelecionado: number;
 	constructor(private indService :IndicadoresService, mapService : MapService) { }
 
 	ngOnInit() {
 		this.GetCategorias();
+		this.GetAno();
 	}
 
 	OnSelectCategoria(categoria) : void{
@@ -30,5 +32,9 @@ export class IndicadoresComponent implements OnInit {
 	  		 .subscribe(indicadores =>  this.indicadores = indicadores);
 	}	
 
-
+	GetAno(): void{
+		console.log("GetAno: ");
+		this.indService.GetAno()
+			.subscribe(anos => this.anos = anos);
+	}
 }
