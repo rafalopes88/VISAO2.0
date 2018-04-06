@@ -1,4 +1,4 @@
 export class Dados{
-	municipio:number;
+	divisao:number;
 	valor:number;
 }
