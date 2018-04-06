@@ -27,9 +27,8 @@ export class MapComponent implements OnInit {
 	municipio: L.GeoJSON;
 	mesoRegiao: L.GeoJSON;
 	estado: L.GeoJSON;
-	displayData: any;
+	displayData: boolean = false;
 	dadoMostrado: string;
-	
 
 
 	constructor(private mapService: MapService) {}
@@ -132,10 +131,9 @@ export class MapComponent implements OnInit {
 	    if (!L.Browser.ie && !L.Browser.edge) {
 	        layer.bringToFront();
 	    }
-	    this.displayData = true;
+	    _that.displayData = true;
 	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
-
-	    this.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+	    _that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
 	}
 
 	ResetHighlight(e) {
@@ -143,7 +141,8 @@ export class MapComponent implements OnInit {
 	    layer.setStyle({
 	    	weight: 0.5
 	    });
-	    this.displayData = false;
+
+	    _that.displayData = false;
 	}
 
 	ColorirMapa(dados1){
