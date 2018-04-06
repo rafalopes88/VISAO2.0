@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.get('/api/GetDivisoes', function (req, res) {
+app.get('/api/GetDivisoes', function (req, res) {	
 	let mapServiceObj = new mapService(req, res);
 	mapServiceObj.GetDivisoes();
 });
@@ -25,6 +25,10 @@ app.get('/api/AplicarIndicador', function (req, res) {
 app.get('/api/GetIndicadores', function (req, res) {
 	let IndServiceObj = new IndicadoresService(req, res);
 	IndServiceObj.GetIndicadores();
+});
+app.get('/api/GetAno', function (req, res) {
+	let IndServiceObj = new IndicadoresService(req, res);
+	IndServiceObj.GetAno();
 });
 
 app.listen(3000, function () {

@@ -1,7 +1,6 @@
 let mysql = require('mysql');
 const fs = require('fs');
 
-//SERÁ QUE VOU COMEÇAR A TRABALHAR?
 
 class IndicadoresService{
 
@@ -9,7 +8,7 @@ class IndicadoresService{
         this.req = req
         this.res = res
     }
-
+//Funcao para coletar os indicadores e categoria pertencentes ao VISAO
     GetIndicadores(){
 
     	let self = this;
@@ -19,8 +18,7 @@ class IndicadoresService{
         let nome = [];
         let cod = [];
 
-        try{
-        	
+        try{        	
         	var con = mysql.createConnection({
               host: "localhost",
               user: "root",
@@ -44,32 +42,65 @@ class IndicadoresService{
                                 indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
                                 velhaCategoria = item.categoria;
                                 nome = [item.indicador];
-                                cod = [item.codigo]; 
-                                
-                            }
-                            
+                                cod = [item.codigo];                                 
+                            }                            
                         }
                         else{
                             nome.push(item.indicador);
                             cod.push(item.codigo);
-                        }
-
-                           					
+                        }                           					
 			        });
                     indicadores.push({"categoria": velhaCategoria, "nome": nome, "cod": cod});
                     
                     JSON.stringify(indicadores);
                     
-			        if( indicadores != []){
-                        
+			        if( indicadores != []){                        
 			        	return self.res.status(200).json(indicadores);
-			        }
-			        			        
-			        
+			        }     	    			        
     			});
 			})
         }
         catch(error){
+            return self.res.status(500).json({
+                status: 'error',
+                error: error
+            })
+        }
+    }
+
+    GetAno(){
+        
+        let self = this;
+        let codind = this.req.query.codIndicador;
+        //Verificar se esta recebendo Codigo do Indicador correto
+        //console.time("dbsave");
+        try{  
+
+            var con = mysql.createConnection({
+              host: "localhost",
+              user: "root",
+              password: 'ibict2017',
+              database: "visao"
+            });
+            con.connect(function(err) {
+                if (err) throw err;
+                //Pesquisa sobre os anos do indicador 1
+                con.query('SELECT YEAR(data) ano FROM indicador_informacao ii'+ 
+                    ' INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador'+
+                    ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
+                    ' WHERE cod_indicador = 1'+//+codind+
+                    ' GROUP BY ano;', function (err, data) {
+                    if (err) throw err;
+                    let anos = [];
+                    data.forEach(function(item, index, array) {anos.push(item.ano); });
+                    //console.timeEnd("dbsave");
+                    JSON.stringify(anos);
+                    if( anos != []){                        
+                        return self.res.status(200).json(anos);
+                    } 
+                });
+            });
+        }catch(error){
             return self.res.status(500).json({
                 status: 'error',
                 error: error
