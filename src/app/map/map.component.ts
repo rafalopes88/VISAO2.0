@@ -3,6 +3,8 @@ import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapService } from '../map.service';
 import {Dados} from '../Dados';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
 
 
 declare let $:any;
@@ -133,7 +135,12 @@ export class MapComponent implements OnInit {
 	    }
 	    _that.displayData = true;
 	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
-	    _that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+	    if( index != -1)
+	    	_that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+
+	    Observable.fromEvent(document.body, 'mousemove').subscribe((mouse:MouseEvent) => {
+		  console.log(mouse.pageX, mouse.pageY);
+		});
 	}
 
 	ResetHighlight(e) {
