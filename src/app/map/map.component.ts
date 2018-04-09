@@ -31,12 +31,18 @@ export class MapComponent implements OnInit {
 	estado: L.GeoJSON;
 	displayData: boolean = false;
 	dadoMostrado: string;
+	dataPosX : string;
+	dataPosY: string;
 
 
 	constructor(private mapService: MapService) {}
 
 	ngOnInit() {
 		_that = this;
+		Observable.fromEvent(document.body, 'mousemove').subscribe((mouse:MouseEvent) => {
+	    	_that.dataPosX = (mouse.pageX + 50)  + "px";
+	    	_that.dataPosY = (mouse.pageY+ 50) + "px";
+		});
 		this.InitMap();
 		this.GetBrasil()
 		this.GetDivisoes('municipio');
@@ -137,10 +143,6 @@ export class MapComponent implements OnInit {
 	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
 	    if( index != -1)
 	    	_that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
-
-	    Observable.fromEvent(document.body, 'mousemove').subscribe((mouse:MouseEvent) => {
-		  console.log(mouse.pageX, mouse.pageY);
-		});
 	}
 
 	ResetHighlight(e) {
