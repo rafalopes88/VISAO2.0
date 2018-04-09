@@ -3,6 +3,8 @@ import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapService } from '../map.service';
 import {Dados} from '../Dados';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
 
 
 declare let $:any;
@@ -27,9 +29,8 @@ export class MapComponent implements OnInit {
 	municipio: L.GeoJSON;
 	mesoRegiao: L.GeoJSON;
 	estado: L.GeoJSON;
-	displayData: any;
+	displayData: boolean = false;
 	dadoMostrado: string;
-	
 
 
 	constructor(private mapService: MapService) {}
@@ -132,10 +133,14 @@ export class MapComponent implements OnInit {
 	    if (!L.Browser.ie && !L.Browser.edge) {
 	        layer.bringToFront();
 	    }
-	    this.displayData = true;
+	    _that.displayData = true;
 	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
+	    if( index != -1)
+	    	_that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
 
-	    this.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+	    Observable.fromEvent(document.body, 'mousemove').subscribe((mouse:MouseEvent) => {
+		  console.log(mouse.pageX, mouse.pageY);
+		});
 	}
 
 	ResetHighlight(e) {
@@ -143,7 +148,8 @@ export class MapComponent implements OnInit {
 	    layer.setStyle({
 	    	weight: 0.5
 	    });
-	    this.displayData = false;
+
+	    _that.displayData = false;
 	}
 
 	ColorirMapa(dados1){

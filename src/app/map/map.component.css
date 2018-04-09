@@ -20,6 +20,7 @@
 }
 #data-box{
 	position: absolute;
-	left:200px;
+	left:300px;
 	top:200px;
+	background-color: rgba(255,255,255,0.7);
 }

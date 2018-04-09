@@ -21,14 +21,10 @@ export class IndicadoresComponent implements OnInit {
 	}
 
 	OnSelectCategoria(categoria) : void{
-		if(this.categoriaSelecionada != categoria)
-			this.categoriaSelecionada = categoria;
-		else
-			this.categoriaSelecionada = null;
+		this.categoriaSelecionada = categoria;
 	}
 	AlteraIndicador(indicadorSelecionado) : void{
 		this.indicadorSelecionado = indicadorSelecionado;
-
 	}
 
 	GetCategorias(): void{
