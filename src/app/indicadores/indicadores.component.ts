@@ -37,7 +37,6 @@ export class IndicadoresComponent implements OnInit {
 	}	
 
 	GetAno(): void{
-		console.log("GetAno: ");
 		this.indService.GetAno()
 			.subscribe(anos => this.anos = anos);
 	}
