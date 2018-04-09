@@ -1,6 +1,7 @@
 const express = require('express');
 const mapService  = require('./services/mapService');
 const IndicadoresService  = require('./services/IndicadoresService');
+const InfoGeralService  = require('./services/InfoGeralService');
 const app = express();
 const bodyParser = require('body-parser');
 
@@ -29,6 +30,11 @@ app.get('/api/GetIndicadores', function (req, res) {
 app.get('/api/GetAno', function (req, res) {
 	let IndServiceObj = new IndicadoresService(req, res);
 	IndServiceObj.GetAno();
+});
+app.get('/api/GetInfoGeral', function (req, res) {
+	console.log("Entrou no App.js");
+	let InfoGeralServiceObj = new InfoGeralService(req, res);
+	InfoGeralServiceObj.GetInfoGeral();
 });
 
 app.listen(3000, function () {

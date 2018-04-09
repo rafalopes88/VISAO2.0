@@ -84,7 +84,7 @@ class IndicadoresService{
             });
             con.connect(function(err) {
                 if (err) throw err;
-                //Pesquisa sobre os anos do indicador 1
+                //Pesquisa sobre os anos do indicador 1, MUDAR PARA INPUT
                 con.query('SELECT YEAR(data) ano FROM indicador_informacao ii'+ 
                     ' INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador'+
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
