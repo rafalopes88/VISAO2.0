@@ -13,7 +13,7 @@ export class InfoGeralComponent implements OnInit {
 	constructor(private infoGeralService :InfoGeralService) { }
 
 	ngOnInit() {
-		this.GetInfoGeral();
+		//this.GetInfoGeral();
 	}
 
 	GetInfoGeral(): void{
