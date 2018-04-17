@@ -32,9 +32,8 @@ app.get('/api/GetAno', function (req, res) {
 	IndServiceObj.GetAno();
 });
 app.get('/api/GetInfoGeral', function (req, res) {
-	console.log("Entrou no App.js");
 	let InfoGeralServiceObj = new InfoGeralService(req, res);
-	InfoGeralServiceObj.GetInfoGeral();
+	InfoGeralServiceObj.GetInfoGeral(req,res);
 });
 
 app.listen(3000, function () {

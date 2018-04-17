@@ -8,6 +8,7 @@ import { MapComponent } from './map/map.component';
 import { MapService } from './map.service';
 import { IndicadoresService } from './indicadores.service';
 import { InfoGeralService } from './info-geral.service';
+import { GlobalService } from './global.service';
 import { MessageService } from './message.service';
 import {HttpClientModule} from '@angular/common/http';
 import { IndicadoresComponent } from './indicadores/indicadores.component';
@@ -24,7 +25,7 @@ import { InfoGeralComponent } from './info-geral/info-geral.component';
   imports: [
     BrowserModule, LeafletModule.forRoot(),HttpClientModule
   ],
-  providers: [MapService, MessageService, IndicadoresService,InfoGeralService],
+  providers: [MapService, MessageService, IndicadoresService,InfoGeralService,GlobalService],// InfoGeralComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

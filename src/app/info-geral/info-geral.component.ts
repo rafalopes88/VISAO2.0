@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InfoGeral } from '../InfoGeral';
 import { InfoGeralService } from '../info-geral.service';
+import { GlobalService } from '../global.service';
 
 @Component({
   selector: 'app-info-geral',
@@ -9,15 +10,19 @@ import { InfoGeralService } from '../info-geral.service';
 })
 export class InfoGeralComponent implements OnInit {
 	infoGerais : InfoGeral[];
+	divisao: string;
 
-	constructor(private infoGeralService :InfoGeralService) { }
+	constructor(private infoGeralService :InfoGeralService, private globalService : GlobalService) { }
 
 	ngOnInit() {
-		//this.GetInfoGeral();
+		//Alterar municipio para Divisao
+		this.GetInfoGeral('municipio');
+		this.globalService.divisaoAtual.subscribe(divisao => this.divisao = divisao);
 	}
 
-	GetInfoGeral(): void{
-	  	this.infoGeralService.GetInfoGeral().subscribe(infoGerais => this.infoGerais = infoGerais);//{this.infoGerais = infoGerais;console.log(infoGerais);});
+
+	GetInfoGeral(divisao): void{
+	  	this.infoGeralService.GetInfoGeral(divisao).subscribe(infoGerais => {this.infoGerais = infoGerais;console.log(infoGerais);});
 	}
 
 }

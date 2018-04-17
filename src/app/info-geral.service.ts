@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { InfoGeral } from './InfoGeral';
 import { of } from 'rxjs/observable/of';
+import {Dados} from './Dados';
 
 @Injectable()
 export class InfoGeralService {
@@ -17,9 +18,9 @@ export class InfoGeralService {
 		this.messageService.add('MapService: ' + message);
 	}
 
-  GetInfoGeral(): Observable<InfoGeral[]>{
+  GetInfoGeral(divisao): Observable<InfoGeral[]>{
   	console.log("Entrou no info-Geral.service.js");
-		return this.http.get<InfoGeral[]>(this.indicadoresUrl + "GetInfoGeral").
+		return this.http.get<InfoGeral[]>(this.indicadoresUrl + "GetInfoGeral",{ params: {divisao: divisao }}).
 	    pipe(tap(geometrias => this.log(`fetched info gerais`)),
 	        catchError(this.handleError('GetInfoGeral', []))
 	    );

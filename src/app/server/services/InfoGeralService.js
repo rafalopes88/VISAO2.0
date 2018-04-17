@@ -11,7 +11,9 @@ class InfoGeralService{
     }
 
 //Função para pegar os valores dos dados Gerais disponiveis para cada munícipio
-    GetInfoGeral(){
+    GetInfoGeral(req,res){
+    	let self = this;
+    	let detG = req.query.divisao;
 
     	 try{        	
         	var con = mysql.createConnection({
@@ -24,7 +26,7 @@ class InfoGeralService{
 				var div = {nome:'', join: ''};
 				
 				let detObj = new det();
-                detObj.DetalhamentoGeo(div);
+                detObj.DetalhamentoGeo(div,detG);
 
     			if (err) throw err;
     			/*PIB, PIB per capita, rendimento homens, rendimento mulheres, histórico do pib, população, superior completo*/
@@ -45,8 +47,12 @@ class InfoGeralService{
 				//' or info.nome = "Rendimentos Mulheres"'+
 				//' or info.nome = "Superior Completo"'+
 				' GROUP BY info.nome,divisao'+
-				' ORDER BY '+div.nome+', info.nome;', function (err, data) {
-					console.log("Entrou no InfoGeralService.js");
+				' ORDER BY '+div.nome+', info.nome;', function (err, infoGerais) {
+					JSON.stringify(infoGerais);
+
+					if( infoGerais != []){                        
+			        	return self.res.status(200).json(infoGerais);
+			        }
                 });
             });
     	}catch(error){

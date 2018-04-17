@@ -5,7 +5,10 @@ import { MapService } from '../map.service';
 import {Dados} from '../Dados';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
+import { GlobalService } from '../global.service';
 
+
+//import {InfoGeralComponent} from '../info-geral/info-geral.component';
 
 declare let $:any;
 
@@ -35,7 +38,8 @@ export class MapComponent implements OnInit {
 	dataPosY: string;
 
 
-	constructor(private mapService: MapService) {}
+	//constructor(private mapService: MapService,private globalService : GlobalService) {}
+	constructor(private mapService: MapService,private globalService : GlobalService/*, private infoGeralComp : InfoGeralComponent*/) {}
 
 	ngOnInit() {
 		_that = this;
@@ -43,6 +47,7 @@ export class MapComponent implements OnInit {
 	    	_that.dataPosX = (mouse.pageX + 50)  + "px";
 	    	_that.dataPosY = (mouse.pageY+ 50) + "px";
 		});
+		this.globalService.divisaoAtual.subscribe(divisao => nomeDivisaoAtual = divisao);
 		this.InitMap();
 		this.GetBrasil()
 		this.GetDivisoes('municipio');
@@ -84,7 +89,9 @@ export class MapComponent implements OnInit {
 	AlteraDivisao(divisao){
 		
 		this.divisaoAtual.remove();
+		this.globalService.MudarDivisao(divisao);
 		nomeDivisaoAtual = divisao;
+		//this.infoGeralComp.GetInfoGeral(divisao);
 
 		if(divisao== 'municipio'){
 			this.divisaoAtual = this.municipio;
