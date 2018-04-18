@@ -17,7 +17,6 @@ export class IndicadoresComponent implements OnInit {
 
 	ngOnInit() {
 		this.GetCategorias();
-		this.GetAno();
 	}
 
 	OnSelectCategoria(categoria) : void{
@@ -25,15 +24,18 @@ export class IndicadoresComponent implements OnInit {
 	}
 	AlteraIndicador(indicadorSelecionado) : void{
 		this.indicadorSelecionado = indicadorSelecionado;
+		this.GetAno(indicadorSelecionado);
 	}
 
 	GetCategorias(): void{
 		this.indService.GetCategorias()
 	  		 .subscribe(indicadores =>  this.indicadores = indicadores);
 	}	
-
-	GetAno(): void{
-		this.indService.GetAno()
-			.subscribe(anos => this.anos = anos);
+	AtualizaAnos(anos){
+		this.anos = anos;
+	}
+	GetAno(indicadorSelecionado): void{
+		this.indService.GetAno(indicadorSelecionado)
+			.subscribe(anos => this.AtualizaAnos(anos));
 	}
 }

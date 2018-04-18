@@ -17,8 +17,8 @@ export class IndicadoresService {
 		this.messageService.add('MapService: ' + message);
 	}
 
-	GetAno (): Observable<number[]> {
-	    return this.http.get<number[]>(this.indicadoresUrl+ "GetAno").
+	GetAno (indicadorSelecionado): Observable<number[]> {
+	    return this.http.get<number[]>(this.indicadoresUrl+ "GetAno" , { params: {codIndicador: indicadorSelecionado}}).
 	    pipe(tap(geometrias => this.log(`fetched anos`)),
 	        catchError(this.handleError('GetAno', []))
 	    );                         
