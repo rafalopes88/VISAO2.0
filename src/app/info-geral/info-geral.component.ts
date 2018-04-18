@@ -22,7 +22,7 @@ export class InfoGeralComponent implements OnInit {
 
 
 	GetInfoGeral(divisao): void{
-	  	this.infoGeralService.GetInfoGeral(divisao).subscribe(infoGerais => {this.infoGerais = infoGerais;/*console.log(infoGerais);*/});
+	  	this.infoGeralService.GetInfoGeral(divisao).subscribe(infoGerais => {this.infoGerais = infoGerais;console.log(infoGerais);});
 	}
 
 }
