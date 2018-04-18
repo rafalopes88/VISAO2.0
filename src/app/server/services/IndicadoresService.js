@@ -90,14 +90,14 @@ class IndicadoresService{
                     ' INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador'+
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
                     ' INNER JOIN valor_informacao vi on vi.informacao_cod_informacao = info.cod_informacao'+
-                    ' WHERE cod_indicador = '+req.query.codIndicador+//+codind+
+                    ' WHERE cod_indicador = '+codind+//+codind+
                     ' GROUP BY ano;', function (err, data) {
                     if (err) throw err;
                     let anos = [];
                     data.forEach(function(item, index, array) {anos.push(item.ano); });
                     //console.timeEnd("dbsave");
                     JSON.stringify(anos);
-                    if( anos != []){      Teste                  
+                    if( anos != []){                        
                         return self.res.status(200).json(anos);
                     } 
                 });
