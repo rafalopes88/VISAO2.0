@@ -68,6 +68,7 @@ class IndicadoresService{
         }
     }
 
+//Dois campos em Info_Indicador com MIN_ano e MAX_ano, se ambos foram iguais, a variável é constante no ano, se forem disferentes só será coletado o ano presentes na interseção entre os anos das variáveis constantes.
     GetAno(){
         
         let self = this;
@@ -85,9 +86,10 @@ class IndicadoresService{
             con.connect(function(err) {
                 if (err) throw err;
                 //Pesquisa sobre os anos do indicador 1, MUDAR PARA INPUT
-                con.query('SELECT YEAR(data) ano FROM indicador_informacao ii'+ 
+                con.query('SELECT YEAR(dataAquisicao) ano FROM indicador_informacao ii'+ 
                     ' INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador'+
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
+                    ' INNER JOIN valor_informacao vi on vi.informacao_cod_informacao = info.cod_informacao'+
                     ' WHERE cod_indicador = 1'+//+codind+
                     ' GROUP BY ano;', function (err, data) {
                     if (err) throw err;
