@@ -81,6 +81,7 @@ export class MapComponent implements OnInit {
 		this.AplicarIndicador();
 	}
 	AplicarIndicador(){
+		console.log(this.codIndicador);
 		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador)
       		 .subscribe(dados => this.ColorirMapa(dados));
 	}

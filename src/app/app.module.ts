@@ -13,14 +13,15 @@ import { MessageService } from './message.service';
 import {HttpClientModule} from '@angular/common/http';
 import { IndicadoresComponent } from './indicadores/indicadores.component';
 import { InfoGeralComponent } from './info-geral/info-geral.component';
+import { FiltrosComponent } from './filtros/filtros.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     IndicadoresComponent,
-    InfoGeralComponent
-    
+    InfoGeralComponent,
+    FiltrosComponent
   ],
   imports: [
     BrowserModule, LeafletModule.forRoot(),HttpClientModule

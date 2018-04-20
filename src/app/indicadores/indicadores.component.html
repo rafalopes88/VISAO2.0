@@ -1,4 +1,4 @@
-<div id="indicadores">
+<div id="indicadores" *ngIf="aba == 'indicadores'" >
 	<div id="categorias">
 		<ul *ngFor="let indicador of indicadores" (click)="OnSelectCategoria(indicador.categoria)"> 
 			<li>{{ indicador.categoria }}</li>
@@ -15,4 +15,3 @@
 		</select>
 	</div>
 </div>
-<app-map [codIndicador] = "indicadorSelecionado" ></app-map>

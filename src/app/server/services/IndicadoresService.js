@@ -184,7 +184,6 @@ class IndicadoresService{
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
                     ' INNER JOIN valor_informacao vi on vi.informacao_cod_informacao = info.cod_informacao'+
                     ' WHERE cod_indicador = '+codind+
-                    ' WHERE cod_indicador = '+codind+//+codind+
                     ' GROUP BY ano;', function (err, data) {
                     if (err) throw err;
                     let anos = [];
