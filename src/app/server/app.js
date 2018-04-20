@@ -23,6 +23,16 @@ app.get('/api/AplicarIndicador', function (req, res) {
 	let mapServiceObj = new mapService(req, res);
 	mapServiceObj.AplicarIndicador(req, res);
 });
+
+app.get('/api/AplicarFiltro', function (req, res) {
+	let IndServiceObj = new IndicadoresService(req, res);
+	IndServiceObj.AplicarFiltro(req, res);
+});
+app.get('/api/GetFiltro', function (req, res) {
+	let IndServiceObj = new IndicadoresService(req, res);
+	IndServiceObj.GetFiltro(req, res);
+});
+
 app.get('/api/GetIndicadores', function (req, res) {
 	let IndServiceObj = new IndicadoresService(req, res);
 	IndServiceObj.GetIndicadores();

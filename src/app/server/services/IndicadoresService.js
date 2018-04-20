@@ -1,5 +1,7 @@
 let mysql = require('mysql');
 const fs = require('fs');
+const det = require('./Detalhamento');
+let detG = "";
 
 
 class IndicadoresService{
@@ -68,6 +70,97 @@ class IndicadoresService{
         }
     }
 
+    AplicarFiltro(req,res){
+        let self = this;
+        let filtros=req.query.filtros;
+        let detG = req.query.divisao;
+
+        try{
+            let query;
+            let con = mysql.createConnection({
+              host: "localhost",
+              user: "root",
+              password: 'ibict2017',
+              database: "visao"
+            });            
+
+            con.connect(function(err) {
+              if (err) throw err;
+                let div = {nome:'', join: ''}; 
+                
+                let detObj = new det(req, res);
+                detObj.DetalhamentoGeo(div, detG);
+
+
+                query = 'SELECT '+div.nome+' divisao FROM filtrogeografico fg '+
+                        ' INNER JOIN municipio_filtrogeografico mf ON fg.cod_FiltroGeografico = mf.filtroGeografico_cod_FiltroGeografico '+ div.join;
+                        
+                for (var i = 0, len = filtros.length; i < len; i++) {
+                    if(i==0){
+                        query = query+' WHERE cod_FiltroGeografico = '+filtros[0];
+                    }else{
+                        query = query + ' or cod_FiltroGeografico = '+filtros[i];
+                    }
+                }
+
+                
+                con.query(query, function (err, result, fields) {
+
+                    let municipios = [];
+                    result.forEach(function(item, index, array) {municipios.push(item.divisao);});
+
+                    console.log(municipios);
+                    
+                    JSON.stringify(municipios);
+                    if( municipios != []){                  
+                        return self.res.status(200).json(municipios);
+                    }
+                });
+            });
+        }
+        catch(error){
+            return self.res.status(500).json({
+                status: 'error',
+                error: error
+            });
+        }
+    }
+
+    GetFiltro(){
+        let self = this;
+
+        try{ 
+
+            var con = mysql.createConnection({
+              host: "localhost",
+              user: "root",
+              password: 'ibict2017',
+              database: "visao"
+            });
+            con.connect(function(err) {
+                if (err) throw err;
+               
+                con.query('SELECT cod_FiltroGeografico cod, nome FROM filtrogeografico fg;', function (err, data) {
+                    if (err) throw err;
+                    let filtros = [];
+                    data.forEach(function(item, index, array) {filtros.push(item); });
+
+                    console.log(filtros);
+
+                    JSON.stringify(filtros);
+                    if( filtros != []){                  
+                        return self.res.status(200).json(filtros);
+                    } 
+                });
+            });
+        }catch(error){
+            return self.res.status(500).json({
+                status: 'error',
+                error: error
+            })
+        }
+    }
+
 //Dois campos em Info_Indicador com MIN_ano e MAX_ano, se ambos foram iguais, a variável é constante no ano, se forem disferentes só será coletado o ano presentes na interseção entre os anos das variáveis constantes.
     GetAno(){
         
@@ -75,7 +168,7 @@ class IndicadoresService{
         let codind = this.req.query.codIndicador;
         //Verificar se esta recebendo Codigo do Indicador correto
         //console.time("dbsave");
-        try{  
+        try{ 
 
             var con = mysql.createConnection({
               host: "localhost",
@@ -109,6 +202,8 @@ class IndicadoresService{
             })
         }
     }
+
+
 
 }
 

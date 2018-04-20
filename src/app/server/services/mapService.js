@@ -25,9 +25,9 @@ class MapService{
         this.res = res
     }
 
+
     AplicarIndicador(req, res){
         let self = this;
-        let output = [];
         let detG = req.query.divisao;
 
         function Indicador(m,v){
@@ -39,6 +39,7 @@ class MapService{
         function Resolver(eq){  
             return eval(eq).toFixed(2);
         }
+
         try{
             let output = [];
             let mysql = require('mysql'); 

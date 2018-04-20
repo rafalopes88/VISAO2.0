@@ -27,7 +27,6 @@ class InfoGeralService{
 				
 				let detObj = new det();
                 detObj.DetalhamentoGeo(div,detG);
-                console.log(div);
     			if (err) throw err;
     			/*PIB, PIB per capita, rendimento homens, rendimento mulheres, histórico do pib, população, superior completo*/
                 con.query('SELECT info.nome,YEAR(dataAquisicao) ano, sum(vi.valor) valor, '+div.nome+' divisao '+
@@ -49,8 +48,8 @@ class InfoGeralService{
 				//' or info.nome = "Superior Completo"'+
                 ' GROUP BY '+div.nome+', info.nome, ano'+
 				' ORDER BY '+div.nome+', info.nome;', function (err, infoGerais) {
-					//JSON.stringify(infoGerais);
-					console.log(infoGerais);
+					JSON.stringify(infoGerais);
+					//console.log(infoGerais);
 
 					if( infoGerais != []){                        
 			        	return self.res.status(200).json(infoGerais);
