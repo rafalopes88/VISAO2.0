@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  EventEmitter, Input, Output  } from '@angular/core';
 import { MapService } from '../map.service';
 import { IndicadoresService } from '../indicadores.service';
 import { Indicador } from '../Indicador';
@@ -13,25 +13,29 @@ let nomeDivisaoAtual :string;
   styleUrls: ['./indicadores.component.css']
 })
 export class IndicadoresComponent implements OnInit {
+
+	@Input() aba :string;
 	indicadores : Indicador[];
 	filtros : Filtro[];
 	anos : number[];
 	municipios : number[];
 	categoriaSelecionada: string;
-	indicadorSelecionado: number;
+	@Output() indicadorSelecionado = new EventEmitter<number>();
+
 	constructor(private indService :IndicadoresService, mapService : MapService,private globalService : GlobalService) { }
 
 	ngOnInit() {
 		this.globalService.divisaoAtual.subscribe(divisao => nomeDivisaoAtual = divisao);
 		this.GetCategorias();
 		/*Teste:*/ this.AplicarFiltro(nomeDivisaoAtual,[1,2]);
-		//this.GetFiltro();
+		this.GetFiltro();
 	}
 
 	OnSelectCategoria(categoria) : void{
 		this.categoriaSelecionada = categoria;
 	}
 	AlteraIndicador(indicadorSelecionado) : void{
+		this.indicadorSelecionado.emit(indicadorSelecionado);
 		this.indicadorSelecionado = indicadorSelecionado;
 		this.GetAno(indicadorSelecionado);
 	}

@@ -1,1 +1,11 @@
-<app-indicadores><app-info-geral></app-info-geral></app-indicadores>
+<div>
+	<div id="aplicacao">
+		<ul>
+			<li (click)="SetAba('indicadores')" >Indicadores</li>
+			<li (click)="SetAba('filtros')" >Filtros</li>
+		</ul>
+		<app-indicadores [aba] = aba (indicadorSelecionado)="SetIndicador($event)" ></app-indicadores>
+		<app-filtros [aba] = aba ></app-filtros>
+	</div>
+	<app-map [codIndicador] = "indicadorSelecionado" ></app-map>
+<div>
