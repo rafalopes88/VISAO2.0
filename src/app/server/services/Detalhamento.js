@@ -5,7 +5,7 @@ class Detalhamento{
     }
     //Funcao que configura a pesquisa ao banco de dados para o detalhamento geográfico atual
     DetalhamentoGeo(div,detG){
-        div.nome = "municipio_cod_municipio";//Antes possuia vi.municipio_cod_municipio
+        div.nome = "m.cod_municipio";//Antes possuia municipio_cod_municipio
         div.join = "";
         if(detG != "municipio"){
             if(detG == "estado"){

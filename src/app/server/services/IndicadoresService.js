@@ -91,9 +91,9 @@ class IndicadoresService{
                 let detObj = new det(req, res);
                 detObj.DetalhamentoGeo(div, detG);
 
-
                 query = 'SELECT '+div.nome+' divisao FROM filtrogeografico fg '+
-                        ' INNER JOIN municipio_filtrogeografico mf ON fg.cod_FiltroGeografico = mf.filtroGeografico_cod_FiltroGeografico '+ div.join;
+                        ' INNER JOIN municipio_filtrogeografico mf ON fg.cod_FiltroGeografico = mf.filtroGeografico_cod_FiltroGeografico '+
+                        ' INNER JOIN municipio m on m.cod_municipio = mf.municipio_cod_municipio '+ div.join;
                         
                 for (var i = 0, len = filtros.length; i < len; i++) {
                     if(i==0){
@@ -101,15 +101,11 @@ class IndicadoresService{
                     }else{
                         query = query + ' or cod_FiltroGeografico = '+filtros[i];
                     }
-                }
-
-                
+                }             
                 con.query(query, function (err, result, fields) {
 
                     let municipios = [];
                     result.forEach(function(item, index, array) {municipios.push(item.divisao);});
-
-                    console.log(municipios);
                     
                     JSON.stringify(municipios);
                     if( municipios != []){                  
@@ -183,7 +179,6 @@ class IndicadoresService{
                     ' INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador'+
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
                     ' INNER JOIN valor_informacao vi on vi.informacao_cod_informacao = info.cod_informacao'+
-                    ' WHERE cod_indicador = '+codind+
                     ' WHERE cod_indicador = '+codind+//+codind+
                     ' GROUP BY ano;', function (err, data) {
                     if (err) throw err;

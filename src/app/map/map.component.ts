@@ -36,6 +36,7 @@ export class MapComponent implements OnInit {
 	dadoMostrado: string;
 	dataPosX : string;
 	dataPosY: string;
+	filtrosSelecionados : number[];
 
 
 	//constructor(private mapService: MapService,private globalService : GlobalService) {}
@@ -81,7 +82,8 @@ export class MapComponent implements OnInit {
 		this.AplicarIndicador();
 	}
 	AplicarIndicador(){
-		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador)
+		this.filtrosSelecionados = [1,2];//Teste
+		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
       		 .subscribe(dados => this.ColorirMapa(dados));
 	}
 

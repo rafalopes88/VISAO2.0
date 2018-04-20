@@ -5,6 +5,7 @@ let S = require('string');
 const assert = require('assert');
 let stringify = require('json-stringify');
 const debug = 0;
+const IndService = require('./IndicadoresService');
 
 let detG = "";
 
@@ -29,11 +30,19 @@ class MapService{
     AplicarIndicador(req, res){
         let self = this;
         let detG = req.query.divisao;
+        let filtros = req.query.filtrosSelecionados;
 
-        function Indicador(m,v){
+        function Indicador(m,v,f){
             this.municipio= m;
             this.valor= v;
-        };        
+            this.filtros = f;
+        };  
+
+        function MunFil(c,f){
+            this.codigo = c;
+            this.filtros = f;
+        }
+     
 
         //FunÃ§Ã£o para transformar o string da formula em um resultado
         function Resolver(eq){  
@@ -42,6 +51,7 @@ class MapService{
 
         try{
             let output = [];
+            let munFiltro = [];
             let mysql = require('mysql'); 
             //INPUT de detalhamento geográfico e código do Indicador
             
@@ -53,26 +63,77 @@ class MapService{
               password: 'ibict2017',
               database: "visao"
             });
-
-            
-
             con.connect(function(err) {
-              if (err) throw err;
+
                 let div = {nome:'', join: ''};                
                 
                 let detObj = new det(req, res);
                 detObj.DetalhamentoGeo(div, detG);
 
-                query = 'SELECT ordem,antecessor, uni.nome,  '+div.nome+' as divisao, sum(vi.valor) as valor FROM indicador_informacao ii '+
-                        'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
-                        'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
-                        'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join +
-                        ' where i.cod_indicador = '+codind+' GROUP BY ordem, antecessor, divisao ORDER BY '+div.nome+ ' ,ordem;'
+            if (err) throw err;
+//Pegar os filtros aplicados aos municipios
+            query = 'SELECT '+div.nome+' divisao, cod_FiltroGeografico filtro FROM filtrogeografico fg '+
+                        ' INNER JOIN municipio_filtrogeografico mf ON fg.cod_FiltroGeografico = mf.filtroGeografico_cod_FiltroGeografico '+
+                        ' INNER JOIN municipio m on m.cod_municipio = mf.municipio_cod_municipio '+ div.join;
+                        
+                for (var i = 0, len = filtros.length; i < len; i++) {
+                    if(i==0){
+                        query = query+' WHERE cod_FiltroGeografico = '+filtros[0];
+                    }else{
+                        query = query + ' or cod_FiltroGeografico = '+filtros[i];
+                    }
+                }  
+                query = query + ' ORDER BY divisao';           
+                con.query(query, function (err, result, fields) {
+
+                    let aux = [];
+                    let codAux = result[0].divisao;
+
+                    for(var i = 0, len = result.length; i < len; i++){
+                        if(result[i].divisao != codAux){
+                            munFiltro.push(new MunFil(codAux,aux));
+                            codAux = result[i].divisao;
+                            aux = [];
+                            aux.push(result[i].filtro);
+                        }else{
+                            aux.push(result[i].filtro);
+                        }
+                        if(i+1==len){
+                            munFiltro.push(new MunFil(codAux,aux));
+                        }
+                    }
+                    //console.log(munFiltro);
+                });
+
+                query = 'SELECT ordem,antecessor, uni.nome,  '+div.nome+' as divisao, sum(vi.valor) as valor'+
+                        ' FROM indicador_informacao ii '+
+                        'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador '+
+                        'INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
+                        'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao '+
+                        'INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
+                        'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join;
+                if(filtros.length!=0){
+                    query = query + 'INNER JOIN municipio_filtrogeografico mf on m.cod_municipio = mf.municipio_cod_municipio';
+                }                
+
+                query = query +' WHERE i.cod_indicador = '+codind;
+                for (var i = 0, len = filtros.length; i < len; i++) {
+                    if(i==0){
+                        query = query+' and (filtroGeografico_cod_FiltroGeografico = '+filtros[0];
+                    }else{
+                        query = query + ' or filtroGeografico_cod_FiltroGeografico = '+filtros[i];
+                    }
+                    if(i+1==len){
+                        query = query + ' ) ';
+                    }
+                }
+                query = query + ' GROUP BY ordem, antecessor, divisao ORDER BY '+div.nome+ ' ,ordem;';
                 
                 con.query(query, function (err, result, fields) {
 
+                    let aux = 0;
+
                     if (err) throw err;
-                    
                     //Seleciona a primeira divisao
                     let divisao = result[0].divisao;
                     let equacao = "";
@@ -92,7 +153,9 @@ class MapService{
                 //Quando a busca encontrar outra divisao a equacao da divisao anterior estará completa
                         if(divisao != result[i].divisao){           
                             if(indisponivel == 0){      
-                                output.push(new Indicador(divisao, Resolver(equacao)));
+                                //COLOCAR FILTRO
+                                output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));
+                                aux++;
                             }else{
                                 //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                             }
@@ -114,11 +177,12 @@ class MapService{
                         }
                     }
                     if(indisponivel == 0){
-                        output.push(new Indicador(divisao, Resolver(equacao)));     
+                        //COLOCAR FILTRO
+                        output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));     
                     }else{
                         //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                     }
-                    
+                    console.log(output);
                     //Retorna um JSON com a divisao e o valor do indicador
                     JSON.stringify(output);
                     if( output != []){
