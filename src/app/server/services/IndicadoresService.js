@@ -141,8 +141,6 @@ class IndicadoresService{
                     let filtros = [];
                     data.forEach(function(item, index, array) {filtros.push(item); });
 
-                    console.log(filtros);
-
                     JSON.stringify(filtros);
                     if( filtros != []){                  
                         return self.res.status(200).json(filtros);
@@ -180,6 +178,7 @@ class IndicadoresService{
                     ' INNER JOIN informacao info on ii.informacao_cod_informacao = info.cod_informacao'+
                     ' INNER JOIN valor_informacao vi on vi.informacao_cod_informacao = info.cod_informacao'+
                     ' WHERE cod_indicador = '+codind+//+codind+
+
                     ' GROUP BY ano;', function (err, data) {
                     if (err) throw err;
                     let anos = [];

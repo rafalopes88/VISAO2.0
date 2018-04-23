@@ -42,5 +42,4 @@ export class IndicadoresComponent implements OnInit {
 		this.indService.GetAno(indicadorSelecionado)
 			.subscribe(anos => this.anos = anos);
 	}
-
 }

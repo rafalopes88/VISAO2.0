@@ -83,10 +83,16 @@ export class MapComponent implements OnInit {
 		this.AplicarIndicador();
 	}
 	AplicarIndicador(){
+<<<<<<< HEAD
 
 		// this.filtrosSelecionados = [1,2];//Teste
 		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
       		 .subscribe(dados => this.ColorirMapa(dados));
+=======
+		this.filtrosSelecionados = [1,2];//Teste
+		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
+			.subscribe(dados => this.ColorirMapa(dados));
+>>>>>>> e7223dd906a601fac9f0936bef0a26870d3859a6
 	}
 
 
