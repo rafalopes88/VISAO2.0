@@ -113,8 +113,7 @@ class MapService{
                         'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join;
                 if(filtros.length!=0){
                     query = query + 'INNER JOIN municipio_filtrogeografico mf on m.cod_municipio = mf.municipio_cod_municipio';
-                }                
-
+                } 
                 query = query +' WHERE i.cod_indicador = '+codind;
                 for (var i = 0, len = filtros.length; i < len; i++) {
                     if(i==0){

@@ -155,7 +155,9 @@ class IndicadoresService{
         }
     }
 
-//Dois campos em Info_Indicador com MIN_ano e MAX_ano, se ambos foram iguais, a variável é constante no ano, se forem disferentes só será coletado o ano presentes na interseção entre os anos das variáveis constantes.
+//Dois campos em Info_Indicador com MIN_ano e MAX_ano, se ambos foram iguais,
+//a variável é constante no ano, se forem diferentes só será coletado 
+//o ano presentes na interseção entre os anos das variáveis constantes.
     GetAno(){
         
         let self = this;
