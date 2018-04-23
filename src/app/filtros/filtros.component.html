@@ -1,5 +1,9 @@
 <div id="filtros" *ngIf="aba == 'filtros'">
-	<p>
-	  filtros works!
-	</p>
+	<div id="listaFiltros">
+		<ul> 
+			<li *ngFor="let filtro of filtros; let i=index " >
+				<input type="checkbox" (change)="AddFiltro($event, filtro.cod)" /> {{filtro.nome}}
+			</li>
+	 	</ul>
+	</div>
 </div>
