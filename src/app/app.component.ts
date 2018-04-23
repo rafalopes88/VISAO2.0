@@ -15,7 +15,6 @@ export class AppComponent {
 	ngOnInit() {
 	}
 	SetIndicador(indicadorSelecionado: number){
-		console.log(indicadorSelecionado);
 		this.indicadorSelecionado = indicadorSelecionado;
 	}
 	SetAba(aba:string){

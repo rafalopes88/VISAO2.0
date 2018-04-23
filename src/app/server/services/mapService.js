@@ -102,7 +102,6 @@ class MapService{
                             munFiltro.push(new MunFil(codAux,aux));
                         }
                     }
-                    //console.log(munFiltro);
                 });
 
                 query = 'SELECT ordem,antecessor, uni.nome,  '+div.nome+' as divisao, sum(vi.valor) as valor'+

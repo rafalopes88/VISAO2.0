@@ -58,6 +58,6 @@ export class IndicadoresComponent implements OnInit {
 
 	GetFiltro():any{
 		this.indService.GetFiltro()
-			.subscribe(filtros => {this.filtros = filtros;console.log(filtros);});
+			.subscribe(filtros => {this.filtros = filtros;});
 	}
 }
