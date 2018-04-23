@@ -19,6 +19,7 @@ export class AppComponent {
 		this.indicadorSelecionado = indicadorSelecionado;
 	}
 	SetFiltros(filtros){
+		this.filtros = [];
 		this.filtros = filtros;
 	}
 	SetAba(aba:string){
