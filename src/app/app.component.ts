@@ -10,7 +10,7 @@ export class AppComponent {
 
 	aba: string;
 	indicadorSelecionado:number;
-	filtros:number[];
+	filtros:number[] = [];
 	constructor() { }
 
 	ngOnInit() {

@@ -20,8 +20,6 @@ export class FiltrosComponent implements OnInit {
 
 	ngOnInit() {
 		this.GetFiltro();
-		// this.globalService.divisaoAtual.subscribe(divisao => this.nomeDivisaoAtual = divisao);
-		// this.AplicarFiltro(this.nomeDivisaoAtual,[1,2]);
 	}
 
 	GetFiltro():any{
