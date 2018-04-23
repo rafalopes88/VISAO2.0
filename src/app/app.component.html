@@ -5,7 +5,7 @@
 			<li (click)="SetAba('filtros')" >Filtros</li>
 		</ul>
 		<app-indicadores [aba] = aba (indicadorSelecionado)="SetIndicador($event)" ></app-indicadores>
-		<app-filtros [aba] = aba ></app-filtros>
+		<app-filtros [aba] = aba (codFiltros)="SetFiltros($event)" ></app-filtros>
 	</div>
-	<app-map [codIndicador] = "indicadorSelecionado" ></app-map>
+	<app-map [codIndicador] = "indicadorSelecionado" [filtrosSelecionados]= "filtros" ></app-map>
 <div>

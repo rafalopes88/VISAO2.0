@@ -27,6 +27,7 @@ export class MapComponent implements OnInit {
 	map : L.Map;
 	
 	@Input() codIndicador :number;
+	@Input() filtrosSelecionados : number[];
 	brasil: L.GeoJSON = new L.GeoJSON();
 	divisaoAtual: L.GeoJSON;
 	municipio: L.GeoJSON;
@@ -36,7 +37,7 @@ export class MapComponent implements OnInit {
 	dadoMostrado: string;
 	dataPosX : string;
 	dataPosY: string;
-	filtrosSelecionados : number[];
+	
 
 
 	//constructor(private mapService: MapService,private globalService : GlobalService) {}
@@ -82,9 +83,16 @@ export class MapComponent implements OnInit {
 		this.AplicarIndicador();
 	}
 	AplicarIndicador(){
+<<<<<<< HEAD
+
+		// this.filtrosSelecionados = [1,2];//Teste
+		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
+      		 .subscribe(dados => this.ColorirMapa(dados));
+=======
 		this.filtrosSelecionados = [1,2];//Teste
 		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
 			.subscribe(dados => this.ColorirMapa(dados));
+>>>>>>> e7223dd906a601fac9f0936bef0a26870d3859a6
 	}
 
 

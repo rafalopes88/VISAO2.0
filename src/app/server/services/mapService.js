@@ -108,7 +108,7 @@ class MapService{
                         ' FROM indicador_informacao ii '+
                         'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador '+
                         'INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
-                        'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao '+
+                        'INNER JOIN informacao inmunFiltrofo ON info.cod_informacao = ii.informacao_cod_informacao '+
                         'INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
                         'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join;
                 if(filtros.length!=0){

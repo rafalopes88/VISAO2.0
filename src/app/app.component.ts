@@ -10,12 +10,16 @@ export class AppComponent {
 
 	aba: string;
 	indicadorSelecionado:number;
+	filtros:number[];
 	constructor() { }
 
 	ngOnInit() {
 	}
 	SetIndicador(indicadorSelecionado: number){
 		this.indicadorSelecionado = indicadorSelecionado;
+	}
+	SetFiltros(filtros){
+		this.filtros = filtros;
 	}
 	SetAba(aba:string){
 		this.aba = aba;
