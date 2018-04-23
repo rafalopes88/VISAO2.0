@@ -194,7 +194,7 @@ class MapService{
                     }else{
                         //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                     }
-                    console.log(output);
+                    
                     //Retorna um JSON com a divisao e o valor do indicador
                     JSON.stringify(output);
                     if( output != []){
