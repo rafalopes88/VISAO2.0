@@ -72,6 +72,9 @@ class MapService{
                 
                 let detObj = new det(req, res);
                 detObj.DetalhamentoGeo(div, detG);
+                if(filtros == undefined){
+                    filtros = [];
+                }
 
             if (err) throw err;
 //Pegar os filtros aplicados aos municipios
@@ -111,7 +114,7 @@ class MapService{
                         ' FROM indicador_informacao ii '+
                         'INNER JOIN indicador i ON i.cod_indicador = ii.indicador_cod_indicador '+
                         'INNER JOIN unidade uni ON i.unidade_cod_unidade = uni.cod_unidade '+
-                        'INNER JOIN informacao inmunFiltrofo ON info.cod_informacao = ii.informacao_cod_informacao '+
+                        'INNER JOIN informacao info ON info.cod_informacao = ii.informacao_cod_informacao '+
                         'INNER JOIN valor_informacao vi ON vi.informacao_cod_informacao = info.cod_informacao '+
                         'INNER JOIN municipio m ON vi.municipio_cod_municipio = m.cod_municipio '+ div.join;
                 if(filtros.length!=0){
@@ -155,8 +158,12 @@ class MapService{
                         if(divisao != result[i].divisao){           
                             if(indisponivel == 0){      
                                 //COLOCAR FILTRO
-                                output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));
-                                aux++;
+                                if(filtros.length == 0){
+                                    output.push(new Indicador(divisao, Resolver(equacao),[]));
+                                }else{
+                                    output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));
+                                    aux++;
+                                }
                             }else{
                                 //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                             }
@@ -179,7 +186,11 @@ class MapService{
                     }
                     if(indisponivel == 0){
                         //COLOCAR FILTRO
-                        output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));     
+                        if(filtros.length == 0){
+                            output.push(new Indicador(divisao, Resolver(equacao),[]));
+                        }else{
+                            output.push(new Indicador(divisao, Resolver(equacao),munFiltro[aux].filtros));
+                        }    
                     }else{
                         //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                     }
