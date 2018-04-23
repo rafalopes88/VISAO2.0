@@ -19,6 +19,20 @@ class Municipio{
 }
 
 
+class Indicador{
+    constructor(m,v,f){
+        this.municipio= m;
+        this.valor= v;
+        this.filtros = f;
+    }
+}
+class MunFil{
+    constructor(c,f){
+        this.codigo = c;
+        this.filtros = f;
+    }
+}
+
 class MapService{
     
     constructor(req, res){
@@ -31,17 +45,6 @@ class MapService{
         let self = this;
         let detG = req.query.divisao;
         let filtros = req.query.filtrosSelecionados;
-
-        function Indicador(m,v,f){
-            this.municipio= m;
-            this.valor= v;
-            this.filtros = f;
-        };  
-
-        function MunFil(c,f){
-            this.codigo = c;
-            this.filtros = f;
-        }
      
 
         //FunÃ§Ã£o para transformar o string da formula em um resultado
