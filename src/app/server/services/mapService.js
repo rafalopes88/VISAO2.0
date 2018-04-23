@@ -18,20 +18,6 @@ class Municipio{
 	}
 }
 
-class Indicador{
-    constructor(m,v,f){
-        this.municipio= m;
-        this.valor= v;
-        this.filtros = f;
-    }
-}
-class MunFil{
-    constructor(c,f){
-        this.codigo = c;
-        this.filtros = f;
-    }
-}
-
 
 class Indicador{
     constructor(m,v,f){
