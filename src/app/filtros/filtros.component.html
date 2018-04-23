@@ -1,4 +1,4 @@
-<div id="filtros" *ngIf="aba == 'filtros'">
+<div id="filtros" [hidden]="aba != 'filtros'">
 	<div id="listaFiltros">
 		<ul> 
 			<li *ngFor="let filtro of filtros; let i=index " >

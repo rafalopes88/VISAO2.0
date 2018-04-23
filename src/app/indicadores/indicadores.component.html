@@ -1,4 +1,4 @@
-<div id="indicadores" *ngIf="aba == 'indicadores'" >
+<div id="indicadores" [hidden]="aba != 'indicadores'" >
 	<div id="categorias">
 		<ul *ngFor="let indicador of indicadores" (click)="OnSelectCategoria(indicador.categoria)"> 
 			<li>{{ indicador.categoria }}</li>

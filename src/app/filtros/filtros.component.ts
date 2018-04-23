@@ -31,8 +31,4 @@ export class FiltrosComponent implements OnInit {
 		event.target.checked ? this.codsAuxs.push(cod) : this.codsAuxs.splice(this.codsAuxs.indexOf(cod), 1);
 		this.codFiltros.emit(this.codsAuxs);
 	}
-	// AplicarFiltro(divisao, filtrosSelecionados):any{
-	// 	this.indService.AplicarFiltro(divisao,filtrosSelecionados)
-	// 		.subscribe(municipios => this.municipios = municipios);
-	// }
 }
