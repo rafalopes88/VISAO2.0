@@ -18,6 +18,20 @@ class Municipio{
 	}
 }
 
+class Indicador{
+    constructor(m,v,f){
+        this.municipio= m;
+        this.valor= v;
+        this.filtros = f;
+    }
+}
+class MunFil{
+    constructor(c,f){
+        this.codigo = c;
+        this.filtros = f;
+    }
+}
+
 
 class MapService{
     
@@ -31,7 +45,7 @@ class MapService{
         let self = this;
         let detG = req.query.divisao;
         let filtros = req.query.filtrosSelecionados;
-
+/*
         function Indicador(m,v,f){
             this.municipio= m;
             this.valor= v;
@@ -41,7 +55,7 @@ class MapService{
         function MunFil(c,f){
             this.codigo = c;
             this.filtros = f;
-        }
+        }*/
      
 
         //FunÃ§Ã£o para transformar o string da formula em um resultado
@@ -191,7 +205,7 @@ class MapService{
                     }else{
                         //console.log("INDICADOR INDISPONIVEL PARA DIVISAO "+ divisao);
                     }
-                    console.log(output);
+                    //console.log(output);
                     //Retorna um JSON com a divisao e o valor do indicador
                     JSON.stringify(output);
                     if( output != []){
