@@ -1,4 +1,5 @@
-let mysql = require('mysql');
+//let mysql = require('mysql');
+const c = require('./Conexao');
 const fs = require('fs');
 const det = require('./Detalhamento');
 
@@ -16,12 +17,7 @@ class InfoGeralService{
     	let detG = req.query.divisao;
 
     	 try{        	
-        	var con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });
+        	var con = c.Conectar();
 			con.connect(function(err) {
 				var div = {nome:'', join: ''};
 				

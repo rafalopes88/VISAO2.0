@@ -1,5 +1,6 @@
 const det = require('./Detalhamento');
-let mysql = require('mysql');
+const c = require('./Conexao');
+//let mysql = require('mysql');
 const fs = require('fs');
 let S = require('string');
 const assert = require('assert');
@@ -59,12 +60,7 @@ class MapService{
             
             let codind = req.query.codIndicador;
             let query;
-            let con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });
+            var con = c.Conectar();
             con.connect(function(err) {
 
                 let div = {nome:'', join: ''};                

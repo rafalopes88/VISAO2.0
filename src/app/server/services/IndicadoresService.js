@@ -1,4 +1,5 @@
-let mysql = require('mysql');
+const c = require('./Conexao');
+//let mysql = require('mysql');
 const fs = require('fs');
 const det = require('./Detalhamento');
 let detG = "";
@@ -21,12 +22,7 @@ class IndicadoresService{
         let cod = [];
 
         try{        	
-        	var con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });
+        	var con = c.Conectar();
 			con.connect(function(err) {
     			if (err) throw err;
                     con.query('SELECT ind.cod_indicador as codigo,cat.nome as categoria,ind.nome as indicador '+
@@ -77,12 +73,7 @@ class IndicadoresService{
 
         try{
             let query;
-            let con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });            
+            var con = c.Conectar();            
 
             con.connect(function(err) {
               if (err) throw err;
@@ -127,12 +118,7 @@ class IndicadoresService{
 
         try{ 
 
-            var con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });
+            var con = c.Conectar();
             con.connect(function(err) {
                 if (err) throw err;
                
@@ -166,12 +152,7 @@ class IndicadoresService{
         //console.time("dbsave");
         try{ 
 
-            var con = mysql.createConnection({
-              host: "localhost",
-              user: "root",
-              password: 'ibict2017',
-              database: "visao"
-            });
+            var con = c.Conectar();
             con.connect(function(err) {
                 if (err) throw err;
                 //Pesquisa sobre os anos do indicador 1, MUDAR PARA INPUT
