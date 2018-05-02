@@ -83,7 +83,6 @@ export class MapComponent implements OnInit {
 		this.AplicarIndicador();
 	}
 	AplicarIndicador(){
-		console.log(this.filtrosSelecionados);
 		this.mapService.AplicaIndicador(nomeDivisaoAtual, this.codIndicador, this.filtrosSelecionados)
 	  		 .subscribe(dados => this.ColorirMapa(dados));
 
@@ -141,34 +140,42 @@ export class MapComponent implements OnInit {
 
 	HighlightFeature(e) {
 	    let layer = e.target;
-	    layer.setStyle({
-	        weight: 3
-	    });
-	   
-
-	    if (!L.Browser.ie && !L.Browser.edge) {
-	        layer.bringToFront();
-	    }
-	    _that.displayData = true;
+	    
 	    let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
-	    if( index != -1)
+	    if( index != -1){
+		    	let layer = e.target;
+		    layer.setStyle({
+		        weight: 3
+		    });
+		   
+
+		    if (!L.Browser.ie && !L.Browser.edge) {
+		        layer.bringToFront();
+		    }
+	    	_that.displayData = true;
 	    	_that.dadoMostrado = layer.feature.properties.NOME + ":"+dados[nomeDivisaoAtual][index].valor;
+	    }
 	}
 
 	ResetHighlight(e) {
 		let layer = e.target;
-	    layer.setStyle({
-	    	weight: 0.5
-	    });
-
+		let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(layer.feature.properties.CD_GEOCMU));
+	    if( index != -1){
+		    layer.setStyle({
+		    	weight: 0.5
+		    });
+		}
 	    _that.displayData = false;
 	}
 
 	ColorirMapa(dados1){
+
 		dados[nomeDivisaoAtual] = new Array();
 		dados[nomeDivisaoAtual] = dados1.map(function(x) {return {"cod":x.municipio, "valor": Number(x.valor)}; });
+
 		min = Math.min.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
   		max = Math.max.apply(Math,dados[nomeDivisaoAtual].map(function(o){return o.valor;}));
+
 		this.divisaoAtual.setStyle(this.Style);
 		this.divisaoAtual.eachLayer(function(layer){
 			layer.on({
@@ -185,7 +192,7 @@ export class MapComponent implements OnInit {
   		let high = [151, 83, 34];
   		let delta;
 		let color = [];
-		let outlineWeight = 0.5, zIndex = 1;
+		let outlineWeight = 0, zIndex = 1;
   		let strokeColorVal = '#fff';
   		let opacity = 0;
   		let index = dados[nomeDivisaoAtual].map(function(x) {return x.cod; }).indexOf(Number(feature.properties.CD_GEOCMU));
@@ -195,6 +202,7 @@ export class MapComponent implements OnInit {
 			for (let i = 0; i < 3; i++) {
 		      color[i] = (high[i] - low[i]) * delta + low[i];
 		    }
+		    outlineWeight = 0.5;
 		    opacity = 0.75;
 		}
 		
