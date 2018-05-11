@@ -3,7 +3,7 @@ class Detalhamento{
         this.req = req
         this.res = res
     }
-    //Funcao que configura a pesquisa ao banco de dados para o detalhamento geográfico atual
+    //Funcao que configura a pesquisa ao banco de dados para a divisão do territótio geográfico atual
     DetalhamentoGeo(div,detG){
         div.nome = "m.cod_municipio";//Antes possuia municipio_cod_municipio
         div.join = "";
