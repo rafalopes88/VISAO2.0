@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { MapService } from './map.service';
@@ -14,6 +14,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { IndicadoresComponent } from './indicadores/indicadores.component';
 import { InfoGeralComponent } from './info-geral/info-geral.component';
 import { FiltrosComponent } from './filtros/filtros.component';
+import { BuscaEspecificaComponent } from './busca-especifica/busca-especifica.component';
 
 @NgModule({
   declarations: [
@@ -21,10 +22,11 @@ import { FiltrosComponent } from './filtros/filtros.component';
     MapComponent,
     IndicadoresComponent,
     InfoGeralComponent,
-    FiltrosComponent
+    FiltrosComponent,
+    BuscaEspecificaComponent
   ],
   imports: [
-    BrowserModule, LeafletModule.forRoot(),HttpClientModule
+    BrowserModule, LeafletModule.forRoot(),HttpClientModule, AngularFontAwesomeModule
   ],
   providers: [MapService, MessageService, IndicadoresService,InfoGeralService,GlobalService],// InfoGeralComponent],
   bootstrap: [AppComponent]

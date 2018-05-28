@@ -3,9 +3,10 @@ module.exports = {
     var mysql = require('mysql');
     	return mysql.createConnection({
 			  host: "localhost",
-			  user: "root",
+			  user: "ibict",
 			  password: "ibict2017",
-			  database: "visao"  
+			  database: "visao" 
+
 			});
   }
 };
